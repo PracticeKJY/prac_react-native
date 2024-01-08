@@ -1,32 +1,72 @@
+// import react hook
+import { useState } from "react";
+
 // import widget
-import { Platform, StyleSheet, View } from "react-native";
+import { View, FlatList } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 // import local data
-import { myProfile } from "./src/data";
+import { myProfile, friendProfiles } from "./src/data";
 
 // import component
 import Header from "./components/Header";
-import MyProfile from "./components/MyProfile";
+import Profile from "./components/Profile";
 import Margin from "./components/Margin";
+import Division from "./components/Division";
+import FriendSection from "./components/FriendSection";
+import TabBar from "./components/TabBar";
 
 export default function App() {
-  return (
-    <SafeAreaProvider>
-      <SafeAreaView style={{ flex: 1 }}>
+  const [isOpened, setIsOpened] = useState(true);
+  const [selectedIdx, setSelectedIdx] = useState(0);
+
+  const onPressArrow = () => {
+    setIsOpened(!isOpened);
+  };
+
+  const renderItem = ({ item }) => {
+    return (
+      <View>
+        <Profile uri={item.uri} name={item.name} introduce={item.introduction} />
+      </View>
+    );
+  };
+  const ItemSeparatorComponent = () => <Margin height={13} />;
+
+  const ListHeaderComponent = () => {
+    return (
+      <View style={{ backgroundColor: "white" }}>
         <Header />
         <Margin height={10} />
-        <MyProfile uri={myProfile.uri} name={myProfile.name} introduce={myProfile.introduction} />
+        <Profile uri={myProfile.uri} name={myProfile.name} introduce={myProfile.introduction} isMe={true} />
+        <Margin height={15} />
+        <Division />
+        <FriendSection friendProfileLength={friendProfiles.length} onPress={onPressArrow} isOpened={isOpened} />
+      </View>
+    );
+  };
+
+  const ListFooterComponent = () => <Margin height={10} />;
+
+  return (
+    <SafeAreaProvider>
+      <SafeAreaView style={{ flex: 1 }} edges={["top", "right", "bottom", "left"]}>
+        <FlatList
+          data={isOpened ? friendProfiles : []}
+          stickyHeaderIndices={[0]}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingHorizontal: 15 }}
+          keyExtractor={(_, i) => i}
+          renderItem={renderItem}
+          ItemSeparatorComponent={ItemSeparatorComponent}
+          ListHeaderComponent={ListHeaderComponent}
+          ListFooterComponent={ListFooterComponent}
+        />
+        <TabBar selectedIdx={selectedIdx} setSelectedIdx={setSelectedIdx} />
       </SafeAreaView>
     </SafeAreaProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
 
 //  safeAreaView = 자동으로 핸드폰의 상단조절
 // 모바일 상단에 딱 맞게 조절되도록 위젯들을 배치하는 방법

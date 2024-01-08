@@ -1,7 +1,12 @@
-import { View } from "react-native";
+// import styled-components
+import styled from "styled-components/native";
 
 const Margin = ({ height }) => {
-  return <View style={{ height: height }} />;
+  return <MarginComponents height={height} />;
 };
 
 export default Margin;
+
+const MarginComponents = styled.View`
+  height: ${(props) => props.height}px;
+`;
