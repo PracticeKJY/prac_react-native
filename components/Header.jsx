@@ -4,10 +4,6 @@ import styled from "styled-components/native";
 // import Icons
 import { Ionicons } from "@expo/vector-icons";
 
-const IoniconsWrap = styled.View`
-  padding: 0 6px;
-`;
-
 // Header
 
 const Header = () => {
@@ -45,8 +41,14 @@ const IconButtonWrap = styled.View`
 
 const IconButton = ({ name }) => {
   return (
-    <IoniconsWrap>
+    <IoniconsWrap hitSlop={{ top: 15, bottom: 15 }}>
       <Ionicons name={name} size={24} color="black" />
     </IoniconsWrap>
   );
 };
+
+const IoniconsWrap = styled.TouchableOpacity`
+  padding: 0 6px;
+`;
+
+// hitSlop = button에 padding을 줘서 클릭하기 편하게 하는 것 처럼 TouchableOpacity에서 영역을 넓히는 속성
